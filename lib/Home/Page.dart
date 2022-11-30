@@ -25,13 +25,14 @@ class HomePage extends StatelessWidget {
             backgroundColor: Colors.white,
             centerTitle: true,
           ),
-          floatingActionButton: FloatingActionButton(
-            backgroundColor: Colors.white,
-            onPressed: () {
-              controller.getList();
+          floatingActionButton: InkWell(
+
+            // backgroundColor: Colors.white,
+            onTap: () async{
+              await Get.delete<HomeController>();
               Get.to(const HomeEditPage());
             },
-            child:  const SvgViewer('assets/ic_add_note.svg',width: 100,),
+            child:  const SvgViewer('assets/ic_add_note.svg',width: 50,),
           ),
           body: DefaultTabController(
             length: 3,
@@ -68,35 +69,58 @@ class Work extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return items.isNotEmpty? ListView(
-      children: makeTreeItems(items, 2).map<Widget>((e){
+    children: makeTreeItems(items, 2).map<Widget>((e){
         return Row(
+          crossAxisAlignment : CrossAxisAlignment.start,
+          mainAxisSize:MainAxisSize.max,
           children: e.map<Widget>((item){
             return Container(
-              width: (Get.width-40)/2,
+              width: (Get.width-25)/2,
               margin: const EdgeInsets.all(5),
               color: Colors.amberAccent,
               child: Column(
+                mainAxisSize:MainAxisSize.min,
                 crossAxisAlignment : CrossAxisAlignment.start,
                 children: [
-                  Text( item['date'].toString()??''),
-                  const SizedBox(height: 10),
-                  Text(item['content']??'',maxLines: 3,overflow: TextOverflow.ellipsis,),
-                  const SizedBox(height: 10),
-                  Text(item['time']??''),
                   Row(
-                    mainAxisAlignment : MainAxisAlignment.spaceBetween,
                     children: [
-                      InkWell(onTap: (){
-                        int index= (controller.item).indexWhere((element) => element['content'] == item['content']);
-                        controller.item.removeAt(index);
-                        Setting().put('listNote',controller.item);
-                        controller.getList();
-                      },child: const Icon(Icons.delete),),
-                      InkWell(onTap: ()async{
-                        int index= items.indexWhere((element) => element['content'] == item['content']);
-                        Get.to(HomeEditPage(item: (item as Map)..addAll({'index':index}),));
-                      },child: const Icon(Icons.edit),),
+                      const SvgViewer('assets/dollar-2-6.svg',width: 20),
+                      const SizedBox(width: 5),
+                      Text( item['date'].toString()??''),
                     ],
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(12).copyWith(top: 0),
+                    child: Column(
+                      crossAxisAlignment : CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(height: 5),
+                        SizedBox(
+                            height: 50,
+                            child: Text(item['content']??'',maxLines: 3,overflow: TextOverflow.ellipsis,)),
+                        const SizedBox(height: 5),
+                        Text('Hẹn giờ: ${item['time'] != ''? item['time']:'Không'}'),
+                        const SizedBox(height: 5),
+
+                        Row(
+                          mainAxisAlignment : MainAxisAlignment.spaceBetween,
+                          children: [
+                            InkWell(onTap: ()async{
+                              await Get.delete<HomeController>();
+                              int index= (controller.item).indexWhere((element) => element['content'] == item['content']);
+                              controller.item.removeAt(index);
+                              Setting().put('listNote',controller.item);
+                              controller.getList();
+                            },child: const SvgViewer('assets/delete-button-svgrepo-com.svg',width: 20)),
+                            InkWell(onTap: ()async{
+                              await Get.delete<HomeController>();
+                              int index= items.indexWhere((element) => element['content'] == item['content']);
+                              Get.to(HomeEditPage(item: item,index:index));
+                            },child: const SvgViewer('assets/ic_edit_note.svg',width: 20)),
+                          ],
+                        ),
+                      ],
+                    ),
                   )
                 ],
               ),

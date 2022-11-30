@@ -11,32 +11,49 @@ class HomeController extends GetxController {
   List item=[];
   @override
   void onInit() {
-  getList();
-  super.onInit();
+    super.onInit();
+    getList();
+
   }
+
   getList() async{
+    listWork.value=[];
+    listPrivate.value=[];
+    listNote.value=[];
+    item = await Setting().get('listNote') ??[];
+    print('---33-$item');
     if (Setting().get('listNote') !=null){
-      item = await Setting().get('listNote');
       for (var element in item) {
         if(element['categoriesId']==1){
-          listWork.value = listWork.value..add(element);
+          print('----------------1---${listWork.contains(element)}');
+          if(!listWork.contains(element)){
+              listWork.value = listWork.value..add(element);
+          }
         }
         if(element['categoriesId']==2){
-          listNote.value = listNote.value..add(element);
+          if(!listNote.contains(element)){
+            listNote.value = listNote.value..add(element);
+          }
         }
         if(element['categoriesId']==3){
-          listPrivate.value = listPrivate.value..add(element);
+          print('----1');
+          if(!listPrivate.contains(element)){
+            listPrivate.value = listPrivate.value..add(element);
+          }
+          print('----1${ listPrivate.value}');
         }
       }
-    }else{
     }
     if(mounted){
-      update();
+       update();
     }
   }
   @override
-  onClose() {
+  void dispose() {
+    listNote.close();
+    listWork.close();
+    listPrivate.close();
     mounted = false;
-    super.onClose();
+    super.dispose();
   }
 }

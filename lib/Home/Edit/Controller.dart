@@ -1,12 +1,14 @@
 import 'dart:core';
+import 'package:app1/Home/Controller.dart';
 import 'package:app1/import.dart';
 import 'package:app1/libs/SettingLib.dart';
 import  'package:intl/intl.dart';
 
 class HomeEditController extends GetxController {
   final Map? param;
+  final int? index;
 
-  HomeEditController({this.param});
+  HomeEditController( {this.param,this.index,});
   RxString date= ''.obs;
   RxString time= ''.obs;
   RxString title= ''.obs;
@@ -45,7 +47,7 @@ class HomeEditController extends GetxController {
     super.dispose();
   }
   submit() async{
-    List listNote= await Setting().get('listNote');
+    List listNote= await Setting().get('listNote')??[];
 
     if(content.value == ''){
       Get.snackbar('Thông báo', 'Bạn chưa nhập nội dung ghi chú.Vui lòng nhập nội dung ghi chú để tiếp tục!',
@@ -64,10 +66,18 @@ class HomeEditController extends GetxController {
         if(param !=null){
           listNote[param!['index']]=item;
           Setting().put('listNote',listNote);
-          Get.offAllNamed('/');
+
+          // await Get.find<HomeController>().getList();
+          await Get.offAllNamed('/');
+          Get.isRegistered<HomeController>()
+              ?  Get.find<HomeController>()
+              :  Get.put(HomeController());
         }else{
           Setting().put('listNote',listNote..add(item));
-          Get.offAllNamed('/');
+          await Get.offAllNamed('/');
+          Get.isRegistered<HomeController>()
+              ?  Get.find<HomeController>()
+              :  Get.put(HomeController());
         }
     }
   }

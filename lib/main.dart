@@ -9,7 +9,7 @@ import 'package:syncfusion_localizations/syncfusion_localizations.dart';
 import 'dart:io' show Directory;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  init();
+  await init();
   runApp(const MyApp());
 }
 

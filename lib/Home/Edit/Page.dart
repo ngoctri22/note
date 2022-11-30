@@ -7,7 +7,8 @@ import  'package:intl/intl.dart';
 
 class HomeEditPage extends StatelessWidget {
   final Map? item;
-  const HomeEditPage({Key? key, this.item}) : super(key: key);
+  final  int? index;
+  const HomeEditPage({Key? key, this.item, this.index}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +26,7 @@ class HomeEditPage extends StatelessWidget {
           FocusScope.of(context).unfocus();
         },
       child: GetBuilder<HomeEditController>(
-          init: HomeEditController(param: item),
+          init: HomeEditController(param: item,index: index),
           builder: (controller) {
             return Scaffold(
               appBar: AppBar(
